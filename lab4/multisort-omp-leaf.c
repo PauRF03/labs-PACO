@@ -35,7 +35,6 @@ void merge(long n, T left[n], T right[n], T result[n*2], long start, long length
         // Base case 
         #pragma omp task
         basicmerge(n, left, right, result, start, length);
-        #pragma omp taskwait
     } else {
         // Recursive decomposition
 
@@ -49,28 +48,26 @@ void merge(long n, T left[n], T right[n], T result[n*2], long start, long length
 void multisort(long n, T data[n], T tmp[n]) {
     if (n >= MIN_SORT_SIZE*4L) {
         // Recursive decomposition
-        multisort(n/4L, &data[0], &tmp[0]);
+        #pragma omp taskgroup
+        {
+            multisort(n / 4L, &data[0], &tmp[0]);
+            multisort(n / 4L, &data[n / 4L], &tmp[n / 4L]);
+            multisort(n / 4L, &data[n / 2L], &tmp[n / 2L]);
+            multisort(n / 4L, &data[3L * n / 4L], &tmp[3L * n / 4L]);
+        }
 
-        multisort(n/4L, &data[n/4L], &tmp[n/4L]);
+        #pragma omp taskgroup
+        {
+            merge(n / 4L, &data[0], &data[n / 4L], &tmp[0], 0, n / 2L);
+            merge(n / 4L, &data[n / 2L], &data[3L * n / 4L], &tmp[n / 2L], 0, n / 2L);
+        }
+    
+        merge(n / 2L, &tmp[0], &tmp[n / 2L], &data[0], 0, n);
 
-        multisort(n/4L, &data[n/2L], &tmp[n/2L]);
-
-        multisort(n/4L, &data[3L*n/4L], &tmp[3L*n/4L]);
-        
-
-        merge(n/4L, &data[0], &data[n/4L], &tmp[0], 0, n/2L);
-
-        merge(n/4L, &data[n/2L], &data[3L*n/4L], &tmp[n/2L], 0, n/2L);
-        
-        
-        merge(n/2L, &tmp[0], &tmp[n/2L], &data[0], 0, n);
-
-        
     } else {
         // Base case
         #pragma omp task
         basicsort(n, data);
-        #pragma omp taskwait
         
     }
 }
