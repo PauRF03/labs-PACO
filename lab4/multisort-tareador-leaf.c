@@ -20,7 +20,7 @@ void basicmerge(long n, T left[n], T right[n], T result[n*2], long start, long l
 void merge(long n, T left[n], T right[n], T result[n*2], long start, long length) {
     if (length < MIN_MERGE_SIZE*2L) {
         // Base case
-	tareador_start_task("basicmerge");
+	    tareador_start_task("basicmerge");
         basicmerge(n, left, right, result, start, length);
         tareador_end_task("basicmerge");
         
@@ -37,7 +37,6 @@ void multisort(long n, T data[n], T tmp[n]) {
 
         multisort(n/4L, &data[0], &tmp[0]);
 
-
         multisort(n/4L, &data[n/4L], &tmp[n/4L]);
 
         multisort(n/4L, &data[n/2L], &tmp[n/2L]);
@@ -45,17 +44,16 @@ void multisort(long n, T data[n], T tmp[n]) {
         multisort(n/4L, &data[3L*n/4L], &tmp[3L*n/4L]);
 
 
-
         merge(n/4L, &data[0], &data[n/4L], &tmp[0], 0, n/2L);
 
-
         merge(n/4L, &data[n/2L], &data[3L*n/4L], &tmp[n/2L], 0, n/2L);
+
 
         merge(n/2L, &tmp[0], &tmp[n/2L], &data[0], 0, n);
 
     } else {
         // Base case
-	tareador_start_task("basicsort");
+	    tareador_start_task("basicsort");
         basicsort(n, data);
         tareador_end_task("basicsort");
     }

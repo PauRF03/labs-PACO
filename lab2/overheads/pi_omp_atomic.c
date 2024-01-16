@@ -21,14 +21,14 @@ double getusec_() {
 #endif
 
 double difference (long int num_steps, int n_threads){
-    double x, sum=0.0;
-    double pi1=0.0, pi2=0.0;
-    double step = 1.0/(double) num_steps;
+    double x, sum = 0.0;
+    double pi1 = 0.0, pi2 = 0.0;
+    double step = 1.0 / (double) num_steps;
 
-    double stamp1=getusec_();
-    for (int iter=0; iter<NUMITERS ; iter++) {
+    double stamp1 = getusec_();
+    for (int iter = 0; iter < NUMITERS ; iter++) {
         sum = 0.0;
-        for (long int i=0; i<num_steps; ++i) {
+        for (long int i = 0; i < num_steps; ++i) {
             x = (i+0.5)*step;
             sum += 4.0/(1.0+x*x);
             }
@@ -46,10 +46,10 @@ double difference (long int num_steps, int n_threads){
            {
 	        int myid = omp_get_thread_num();
 	        int howmany = omp_get_num_threads();
-            for (long int i=myid; i<num_steps; i+=howmany) {
-                x = (i+0.5)*step;
+            for (long int i = myid; i < num_steps; i += howmany) {
+                x = (i + 0.5) * step;
 	         	#pragma omp atomic
-                sum += 4.0/(1.0+x*x);
+                sum += 4.0/(1.0 + x * x);
             }
            }
            pi2 += step * sum;
